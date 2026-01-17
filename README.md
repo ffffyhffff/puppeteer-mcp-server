@@ -104,6 +104,118 @@ Add to your `~/.cursor/mcp.json`:
 | `ALLOW_DANGEROUS` | Allow dangerous browser args (default: false) |
 | `DOCKER_CONTAINER` | Set to "true" when running in Docker |
 
+### Launch Options
+
+You can customize browser behavior in two ways:
+
+1. **Environment Variable**:
+```json
+{
+  "env": {
+    "PUPPETEER_LAUNCH_OPTIONS": "{ \"headless\": false, \"args\": [] }",
+    "ALLOW_DANGEROUS": "true"
+  }
+}
+```
+
+2. **Tool Call Arguments**:
+```json
+{
+  "url": "https://example.com",
+  "launchOptions": {
+    "headless": false,
+    "defaultViewport": { "width": 1280, "height": 720 }
+  }
+}
+```
+
+## Usage Examples
+
+### Navigate and Screenshot
+
+```javascript
+// Navigate to a page
+await puppeteer_navigate({ url: "https://example.com" });
+
+// Take a screenshot
+await puppeteer_screenshot({
+  name: "example",
+  width: 1280,
+  height: 720,
+  format: "png"
+});
+```
+
+### Form Interaction
+
+```javascript
+// Fill a form field
+await puppeteer_fill({
+  selector: "input[name='email']",
+  value: "user@example.com"
+});
+
+// Click a button
+await puppeteer_click({
+  selector: "button[type='submit']"
+});
+```
+
+### JavaScript Execution
+
+```javascript
+// Execute JavaScript in browser
+const result = await puppeteer_evaluate({
+  script: "document.querySelectorAll('a').length"
+});
+```
+
+## Security
+
+The server includes security validation for dangerous browser arguments:
+
+- `--no-sandbox`
+- `--disable-setuid-sandbox`
+- `--single-process`
+- `--disable-web-security`
+- `--ignore-certificate-errors`
+
+These require explicit `allowDangerous: true` or `ALLOW_DANGEROUS=true` environment variable.
+
+## Build
+
+```bash
+# Development build with watch mode
+npm run watch
+
+# Production build
+npm run build
+```
+
+### Docker Build
+
+```bash
+docker build -t mcp/puppeteer -f Dockerfile .
+```
+
+## Dependencies
+
+- `@modelcontextprotocol/sdk` - MCP SDK
+- `puppeteer` - Browser automation
+- `puppeteer-extra` - Puppeteer plugins framework
+- `puppeteer-extra-plugin-stealth` - Anti-detection
+- `puppeteer-extra-plugin-adblocker` - Ad blocking
+
 ## License
 
 MIT License
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Links
+
+- [Model Context Protocol](https://modelcontextprotocol.io)
+- [Puppeteer Documentation](https://pptr.dev)
+- [puppeteer-extra](https://github.com/berstend/puppeteer-extra)
